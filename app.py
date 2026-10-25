@@ -6,7 +6,6 @@ PAGE = ('<html><head><link rel="stylesheet" href="/static/app.css"><script src="
         '</head><body><h1>{title}</h1><a href="/products">products</a> <a href="/about">about</a>'
         '</body></html>')
 
-
 @app.get("/", response_class=HTMLResponse)
 async def index():
     return PAGE.format(title="Home")
