@@ -9,7 +9,6 @@ PAGE = ('<html><head><link rel="stylesheet" href="/static/app.css"><script src="
 @app.get("/", response_class=HTMLResponse)
 async def index():
     return PAGE.format(title="Home")
-
 @app.get("/products", response_class=HTMLResponse)
 async def products():
     return PAGE.format(title="Products")
