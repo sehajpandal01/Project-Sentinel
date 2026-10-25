@@ -17,8 +17,6 @@ async def products():
 @app.get("/about", response_class=HTMLResponse)
 async def about():
     return PAGE.format(title="About")
-
-
 @app.get("/search")
 async def search(q: str = ""):
     return {"query": q, "results": []}
