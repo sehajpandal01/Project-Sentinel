@@ -13,7 +13,6 @@ async def index():
 @app.get("/products", response_class=HTMLResponse)
 async def products():
     return PAGE.format(title="Products")
-
 @app.get("/about", response_class=HTMLResponse)
 async def about():
     return PAGE.format(title="About")
