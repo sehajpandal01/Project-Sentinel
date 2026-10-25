@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Sentinel</title>
+<style>
+body{font:14px system-ui;margin:24px;background:#0f1419;color:#e6e6e6}
+h1{font-size:18px}.cards{display:flex;gap:12px;margin-bottom:16px}
+.card{background:#1a2230;padding:12px 16px;border-radius:8px;min-width:110px}
+.card b{display:block;font-size:22px}table{border-collapse:collapse;width:100%}
+td,th{padding:4px 8px;border-bottom:1px solid #26303f;text-align:left;font-size:12px}
+.block{color:#ff6b6b}.challenge{color:#ffc857}canvas{background:#1a2230;border-radius:8px}
+</style></head><body>
+<h1>Sentinel &mdash; live traffic</h1>
+<div class="cards" id="cards"></div>
+<canvas id="c" width="900" height="140"></canvas>
+<p style="opacity:.6">Adaptive threshold (line) vs baseline mean (dim line)</p>
+<table><thead><tr><th>time</th><th>ip</th><th>request</th><th>action</th><th>detector</th><th>reason</th></tr></thead>
+<tbody id="ev"></tbody></table>
+<script>
+const tok=new URLSearchParams(location.search).get("token");
+const H=tok?{"X-Admin-Token":tok}:{};
+const j=u=>fetch(u,{headers:H}).then(r=>r.json());
+function line(ctx,pts,color,max,w,h){ctx.strokeStyle=color;ctx.beginPath();
+ pts.forEach((v,i)=>{const x=i/(Math.max(pts.length-1,1))*w,y=h-v/max*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+async function tick(){
+ const [m,e]=await Promise.all([j("/_sentinel/api/metrics"),j("/_sentinel/api/events?limit=50")]);
+ const t=m.totals;document.getElementById("cards").innerHTML=
+  ["allow","challenge","block"].map(k=>`<div class="card">${k}<b>${t[k]||0}</b></div>`).join("");
+ const c=document.getElementById("c").getContext("2d");c.clearRect(0,0,900,140);
+ const s=m.threshold_series;if(s.length){const max=Math.max(...s.map(p=>p.threshold),1)*1.1;
+  line(c,s.map(p=>p.baseline_mean),"#557",max,900,140);line(c,s.map(p=>p.threshold),"#6bcB77",max,900,140)}
+ document.getElementById("ev").innerHTML=e.map(x=>`<tr><td>${new Date(x.ts*1000).toLocaleTimeString()}</td>
+  <td>${x.ip}</td><td>${x.method} ${x.path}</td><td class="${x.action}">${x.action}${x.enforced?"":" (monitor)"}</td>
+  <td>${x.detector}</td><td>${x.reason}</td></tr>`).join("")}
+tick();setInterval(tick,2000);
+</script></body></html>

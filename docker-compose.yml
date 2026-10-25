@@ -1,0 +1,38 @@
+# UNTESTED in the authoring sandbox (no Docker available) -- verify first.
+# Only `sentinel` is reachable from outside; `backend` lives on an internal-only network.
+services:
+  backend:
+    build: .
+    command: ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "9000"]
+    networks: [internal]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+
+  sentinel:
+    build: .
+    ports: ["8080:8080"]
+    networks: [internal, edge]
+    depends_on: [backend]
+    environment:
+      SENTINEL_UPSTREAM_URL: http://backend:9000
+      SENTINEL_SECRET: ${SENTINEL_SECRET:?export SENTINEL_SECRET (any long random string)}
+      SENTINEL_MODE: ${SENTINEL_MODE:-enforce}
+      # true ONLY for local simulations (simulators spoof X-Forwarded-For). Never on the internet.
+      SENTINEL_TRUST_FORWARDED_FOR: ${SENTINEL_TRUST_FORWARDED_FOR:-false}
+      SENTINEL_ADMIN_TOKEN: ${SENTINEL_ADMIN_TOKEN:-}
+      SENTINEL_MODEL_PATH: ${SENTINEL_MODEL_PATH:-}
+      SENTINEL_BEHAVIOR_THRESHOLD: ${SENTINEL_BEHAVIOR_THRESHOLD:-0.9}
+    volumes:
+      - ./models:/app/models:ro
+      - ./data:/app/data
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://localhost:8080/_sentinel/health')"]
+      interval: 10s
+
+networks:
+  internal: {internal: true}
+  edge: {}

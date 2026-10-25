@@ -1,0 +1,38 @@
+{
+  "before": {
+    "threshold": 0.5,
+    "fpr": 0.0,
+    "fnr": 0.00141643059490085,
+    "precision": 1.0,
+    "fp": 0,
+    "fn": 2,
+    "tp": 1410,
+    "tn": 231
+  },
+  "after": {
+    "threshold": 0.4034,
+    "fpr": 0.0,
+    "fnr": 0.00141643059490085,
+    "precision": 1.0,
+    "fp": 0,
+    "fn": 2,
+    "tp": 1410,
+    "tn": 231
+  },
+  "heuristic": {
+    "threshold": 0.9,
+    "fpr": 0.0,
+    "fnr": 0.13031161473087818,
+    "precision": 1.0,
+    "fp": 0,
+    "fn": 184,
+    "tp": 1228,
+    "tn": 231
+  },
+  "recall_by_label": {
+    "flood": 1.0,
+    "flood_spoofed": 1.0,
+    "graymarket": 1.0,
+    "graymarket_assets": 0.9852941176470589
+  }
+}
