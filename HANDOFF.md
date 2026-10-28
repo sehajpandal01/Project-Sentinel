@@ -1,7 +1,7 @@
 # HANDOFF — read this first
 
 Everything below reflects the actual state of the code. 44 tests pass (`make test`).
-  
+   
 ## Mental model
 Request -> `main.proxy` builds a `RequestContext` -> `Pipeline.evaluate` runs detectors in order
 (`rules`, `rate`, `behavior`) -> first non-ALLOW verdict wins (enforce mode) -> BLOCK=403,
