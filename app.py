@@ -1,4 +1,4 @@
-"""Toy upstream app the WAF protects. Intentionally trivial."""
+"""Toy upstream app the WAF protects. Intentionally trivial.""" 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, PlainTextResponse
 app = FastAPI()
