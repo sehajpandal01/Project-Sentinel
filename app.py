@@ -1,5 +1,5 @@
 """Toy upstream app the WAF protects. Intentionally trivial."""   
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request 
 from fastapi.responses import HTMLResponse, PlainTextResponse
 app = FastAPI()
 PAGE = ('<html><head><link rel="stylesheet" href="/static/app.css"><script src="/static/app.js"></script>'
