@@ -1,6 +1,6 @@
 """Scenario D: self-attack the rule layer. Prints what got through; add every bypass you 
 find to tests/test_rules.py::ATTACKS, patch detectors/rules.py, and document it in
-docs/HANDOFF.md (the adversarial loop)."""
+docs/HANDOFF.md (the adversarial loop).""" 
 from __future__ import annotations
  
 import asyncio
